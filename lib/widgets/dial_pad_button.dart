@@ -1,4 +1,5 @@
 import 'package:dial_zero/models/dialled_model.dart';
+import 'package:dial_zero/router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,6 +50,7 @@ class DialPadButtonWidget extends ConsumerWidget {
               String dialled = ref.read(dialledProvider);
               if(dialled.isNotEmpty) {
                 //Call with dialled
+                router.go("/dial");
               }
             }
         );

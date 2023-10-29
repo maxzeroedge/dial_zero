@@ -82,9 +82,6 @@ class DialerPageWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Phone"),
-      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -97,6 +94,31 @@ class DialerPageWidget extends ConsumerWidget {
               ),
               keyboardType: TextInputType.none,
             ),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //         child: TextField(
+            //           style: TextStyle(
+            //               fontSize: 32.0
+            //           ),
+            //           controller: TextEditingController(
+            //               text: ref.watch(dialledProvider)
+            //           ),
+            //           keyboardType: TextInputType.none,
+            //         )
+            //     ),
+            //     TextButton(
+            //       onPressed: () {
+            //         ref.read(dialledProvider.notifier).removeFromDial();
+            //       },
+            //       style: ButtonStyle(
+            //         alignment: Alignment.center,
+            //         iconSize: MaterialStateProperty.all(32.0),
+            //       ),
+            //       child: Icon(Icons.backspace_rounded),
+            //     )
+            //   ],
+            // ),
             Expanded(
               child: GridView.count(
                   crossAxisCount: 3,
@@ -119,14 +141,14 @@ class DialerPageWidget extends ConsumerWidget {
         items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.phone),
-              label: "Dialpad"
+              label: "Dialer"
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.contact_page),
               label: "Contact"
           )
         ],
-      ),
+      )
     );
   }
 }
