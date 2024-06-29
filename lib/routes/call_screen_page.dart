@@ -1,17 +1,27 @@
 import 'package:dial_zero/models/dialled_model.dart';
+import 'package:dial_zero/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CallScreenPageWidget extends ConsumerWidget {
+enum DialerActions {
+  RECORD(label: "Record", icon: Icons.record_voice_over),
+  HOLD(label: "Hold", icon: Icons.pause),
+  ADD_CALL(label: "Add Call", icon: Icons.add_call),
+  MUTE(label: "Mute", icon: Icons.mic_off),
+  SWITCH_TO_VIDEO(label: "Video", icon: Icons.video_call),
+  AUDIO_SOURCE(label: "Speaker", icon: Icons.speaker),
+  END_CALL(label: "End Call", icon: Icons.call_end);
 
-  final List<String> buttons = [
-    "RECORD",
-    "HOLD",
-    "ADD_CALL",
-    "MUTE",
-    "SWITCH_TO_VIDEO",
-    "AUDIO_SOURCE"
-  ];
+  const DialerActions({
+    required this.label,
+    required this.icon
+  });
+
+  final String label;
+  final IconData icon;
+}
+
+class CallScreenPageWidget extends ConsumerWidget {
 
   Widget build(BuildContext context, WidgetRef ref) {
     String dialledNumber = ref.read(dialledProvider);
@@ -19,28 +29,54 @@ class CallScreenPageWidget extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Text(
-          dialledNumber,
-              style: TextStyle(
-                fontSize: 40.0
+            Expanded(
+              child: DialTargetWidget(dialledNumber: dialledNumber),
+            ),
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 3,
+                children: DialerActions.values
+                    .where((e)=>e != DialerActions.END_CALL)
+                    .map(
+                        (e) => CallScreenButton(type: e)
+                ).toList(),
               ),
             ),
-            GridView.count(
-              crossAxisCount: 3,
-              children: buttons.map(
-                  (e) => CallScreenButton(type: e)
-              ).toList(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                CallScreenButton(type: "END_CALL")
-              ],
+            Container(
+              height: 70.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CallScreenButton(type: DialerActions.END_CALL),
+                ],
+              ),
             )
           ],
         ),
       )
+    );
+  }
+}
+
+class DialTargetWidget extends StatelessWidget {
+  const DialTargetWidget({
+    super.key,
+    required this.dialledNumber,
+  });
+
+  final String dialledNumber;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text(
+        dialledNumber,
+        style: TextStyle(
+            fontSize: 40.0
+        ),
+      ),
     );
   }
 }
@@ -51,59 +87,41 @@ class CallScreenButton extends ConsumerWidget {
     required this.type
   }): super(key: UniqueKey());
 
-  final String type;
+  final DialerActions type;
 
   Widget build(BuildContext context, WidgetRef ref) {
     switch(type) {
-      case "RECORD":
+      case DialerActions.END_CALL:
         return TextButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.record_voice_over),
-            label: Text("Record")
-        );
-      case "HOLD":
-        return TextButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.pause),
-            label: Text("Hold")
-        );
-      case "ADD_CALL":
-        return TextButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.add_call),
-            label: Text("Add Call")
-        );
-      case "MUTE":
-        return TextButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.mic_off),
-            label: Text("Mute")
-        );
-      case "SWITCH_TO_VIDEO":
-        return TextButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.video_call),
-            label: Text("Video")
-        );
-      case "AUDIO_SOURCE":
-        return TextButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.speaker),
-            label: Text("Speaker")
-        );
-      case "END_CALL":
-        return TextButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              onPressedAction(type);
+            },
             style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.red),
-              iconColor: MaterialStatePropertyAll(Colors.white)
+              backgroundColor: WidgetStatePropertyAll(Colors.red),
+              iconColor: WidgetStatePropertyAll(Colors.white),
+              foregroundColor: WidgetStatePropertyAll(Colors.white)
             ),
-            icon: Icon(Icons.call),
-            label: Text("End Call")
+            icon: Icon(type.icon),
+            label: Text(type.label)
         );
       default:
-        return Container();
+        return TextButton.icon(
+            onPressed: () {
+              onPressedAction(type);
+            },
+            icon: Icon(type.icon),
+            label: Text(type.label)
+        );
     }
-      
+  }
+
+  void onPressedAction(DialerActions action) {
+    switch (action) {
+      case DialerActions.END_CALL:
+        router.go("/");
+        break;
+      default:
+        print("No Action Registered");
+    }
   }
 }
