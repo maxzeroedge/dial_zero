@@ -12,9 +12,9 @@ class DialPadButtonWidget extends ConsumerWidget {
     this.subheading = "",
   }): super(key: key);
 
-  String type;
-  String heading;
-  String subheading;
+  final String type;
+  final String heading;
+  final String subheading;
 
   Widget build(BuildContext context, WidgetRef ref) {
     Dialled dialled = ref.read(dialledProvider.notifier);

@@ -1,5 +1,4 @@
 import 'package:dial_zero/providers/battery_state_notifier.dart';
-import 'package:dial_zero/utils/call_screen_utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

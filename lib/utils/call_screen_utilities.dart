@@ -28,6 +28,7 @@ void onPressedAction(DialerActions action) {
       router.go("/");
       break;
     case DialerActions.AUDIO_SOURCE:
+      getAudioList();
       break;
     default:
       print("No Action Registered");
@@ -37,8 +38,14 @@ void onPressedAction(DialerActions action) {
 const dialer_platform = MethodChannel('com.palashmax.dial_zero/dialer_actions');
 const battery_platform = MethodChannel('com.palashmax.dial_zero/battery_actions');
 
-void getAudioList() {
-  //
+Future<List<Object?>?> getAudioList() async {
+  try {
+    final result = await dialer_platform.invokeMethod('getAudioSources');
+    return result;
+  } on PlatformException catch (e) {
+    print("Failed to get battery level: '${e.message}'.");
+    return [];
+  }
 }
 
 Future<int?> getBatteryLevel() async {

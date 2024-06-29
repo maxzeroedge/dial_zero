@@ -1,6 +1,5 @@
 import 'package:dial_zero/models/dialled_model.dart';
 import 'package:dial_zero/utils/call_screen_utilities.dart';
-import 'package:dial_zero/utils/constants.dart';
 import 'package:dial_zero/widgets/battery_background_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
