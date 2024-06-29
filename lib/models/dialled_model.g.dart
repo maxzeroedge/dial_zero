@@ -6,7 +6,7 @@ part of 'dialled_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dialledHash() => r'c3968e7ea2f153449d6d81bf749b787ad4efb237';
+String _$dialledHash() => r'7e4d360c86c40e0714eb8494d2bb3c5e9d08c54e';
 
 /// See also [Dialled].
 @ProviderFor(Dialled)

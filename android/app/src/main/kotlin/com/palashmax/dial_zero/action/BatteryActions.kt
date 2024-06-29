@@ -1,23 +1,21 @@
-package com.palashmax.dial_zero
+package com.palashmax.dial_zero.action
 
 import android.content.Context
 import android.os.BatteryManager
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
-// Building based on: https://developer.android.com/develop/connectivity/telecom/selfManaged
-
-class DialerActions(
-    val batteryManager: BatteryManager,
+class BatteryActions(
+    private val batteryManager: BatteryManager,
     val applicationContext: Context,
-    val flutterEngine: FlutterEngine
+    private val flutterEngine: FlutterEngine
 ) {
-    private val CHANNEL = "com.palashmax.dial_zero/dialer_actions"
+    private val channelName = "com.palashmax.dial_zero/battery_actions"
 
     fun registerChannelHandler() {
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName).setMethodCallHandler {
                 call, result ->
-            if (call.method == "getAudioSources") {
+            if (call.method == "getBatteryLevel") {
                 val batteryLevel = getBatteryLevel()
 
                 if (batteryLevel != -1) {
@@ -36,11 +34,4 @@ class DialerActions(
 
         return batteryLevel
     }
-
-    fun getAudioSources(): List<Any> {
-        // TODO:
-        return listOf()
-    }
-
-
 }

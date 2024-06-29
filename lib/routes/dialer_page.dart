@@ -1,9 +1,12 @@
 import 'package:dial_zero/models/dialled_model.dart';
+import 'package:dial_zero/utils/constants.dart';
+import 'package:dial_zero/widgets/battery_background_indicator.dart';
 import 'package:dial_zero/widgets/dial_pad_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DialerPageWidget extends ConsumerWidget {
+
   final List<Map> keyMap = [
     {
       "type": "NUMBER",
@@ -82,62 +85,66 @@ class DialerPageWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            TextField(
-              style: TextStyle(
-                  fontSize: 32.0
+      body: BatteryBackgroundIndicator(
+        UniqueKey(),
+        child: SafeArea(
+          child: Column(
+            children: [
+              TextField(
+                style: TextStyle(
+                    fontSize: 32.0
+                ),
+                controller: TextEditingController(
+                    text: ref.watch(dialledProvider)
+                ),
+                keyboardType: TextInputType.none,
               ),
-              controller: TextEditingController(
-                  text: ref.watch(dialledProvider)
-              ),
-              keyboardType: TextInputType.none,
-            ),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //         child: TextField(
-            //           style: TextStyle(
-            //               fontSize: 32.0
-            //           ),
-            //           controller: TextEditingController(
-            //               text: ref.watch(dialledProvider)
-            //           ),
-            //           keyboardType: TextInputType.none,
-            //         )
-            //     ),
-            //     TextButton(
-            //       onPressed: () {
-            //         ref.read(dialledProvider.notifier).removeFromDial();
-            //       },
-            //       style: ButtonStyle(
-            //         alignment: Alignment.center,
-            //         iconSize: MaterialStateProperty.all(32.0),
-            //       ),
-            //       child: Icon(Icons.backspace_rounded),
-            //     )
-            //   ],
-            // ),
-            Expanded(
-              child: GridView.count(
-                  crossAxisCount: 3,
-                  shrinkWrap: true,
-                  children: keyMap
-                      .map((e) => DialPadButtonWidget(
-                      ValueKey(e["heading"]),
-                      heading: e["heading"] ?? "",
-                      subheading: e["subheading"] ?? "",
-                      type: e["type"]
-                  )
-                  ).toList()
-              ),
-            )
-          ],
+              // Row(
+              //   children: [
+              //     Expanded(
+              //         child: TextField(
+              //           style: TextStyle(
+              //               fontSize: 32.0
+              //           ),
+              //           controller: TextEditingController(
+              //               text: ref.watch(dialledProvider)
+              //           ),
+              //           keyboardType: TextInputType.none,
+              //         )
+              //     ),
+              //     TextButton(
+              //       onPressed: () {
+              //         ref.read(dialledProvider.notifier).removeFromDial();
+              //       },
+              //       style: ButtonStyle(
+              //         alignment: Alignment.center,
+              //         iconSize: MaterialStateProperty.all(32.0),
+              //       ),
+              //       child: Icon(Icons.backspace_rounded),
+              //     )
+              //   ],
+              // ),
+              Expanded(
+                child: GridView.count(
+                    crossAxisCount: 3,
+                    shrinkWrap: true,
+                    children: keyMap
+                        .map((e) => DialPadButtonWidget(
+                        ValueKey(e["heading"]),
+                        heading: e["heading"] ?? "",
+                        subheading: e["subheading"] ?? "",
+                        type: e["type"]
+                    )
+                    ).toList()
+                ),
+              )
+            ],
+          ),
         ),
       ),
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: batteryColor,
         items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.phone),

@@ -19,41 +19,41 @@ class DialZeroConnection: Connection() {
      * https://developer.android.com/reference/android/telecom/Connection#onCallAudioStateChanged(android.telecom.CallAudioState)
      */
     override fun onCallAudioStateChanged(callAudioState: CallAudioState) {
-        TODO()
+        super.onCallAudioStateChanged(callAudioState)
     }
 
     /**
      * https://developer.android.com/reference/android/telecom/Connection#onHold()
      */
     override fun onHold() {
-        TODO()
+        super.onHold()
     }
 
     /**
      * https://developer.android.com/reference/android/telecom/Connection#onUnhold()
      */
     override fun onUnhold() {
-        TODO()
+        super.onUnhold()
     }
 
     /**
      * https://developer.android.com/reference/android/telecom/Connection#onAnswer()
      */
     override fun onAnswer() {
-        TODO()
+        super.onAnswer()
     }
 
     /**
      * https://developer.android.com/reference/android/telecom/Connection#onReject()
      */
     override fun onReject() {
-        TODO()
+        super.onReject()
     }
 
     /**
      * https://developer.android.com/reference/android/telecom/Connection#onDisconnect()
      */
     override fun onDisconnect() {
-        TODO()
+        super.onDisconnect()
     }
 }

@@ -34,8 +34,19 @@ void onPressedAction(DialerActions action) {
   }
 }
 
-const platform = MethodChannel('com.palashmax.dial_zero/dialer_actions');
+const dialer_platform = MethodChannel('com.palashmax.dial_zero/dialer_actions');
+const battery_platform = MethodChannel('com.palashmax.dial_zero/battery_actions');
 
 void getAudioList() {
   //
+}
+
+Future<int?> getBatteryLevel() async {
+  try {
+    final result = await battery_platform.invokeMethod<int>('getBatteryLevel');
+    return result;
+  } on PlatformException catch (e) {
+    print("Failed to get battery level: '${e.message}'.");
+    return 0;
+  }
 }

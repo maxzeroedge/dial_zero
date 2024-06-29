@@ -15,27 +15,27 @@ class DialZeroConnectionService: ConnectionService() {
      * https://developer.android.com/reference/android/telecom/ConnectionService#onCreateOutgoingConnection(android.telecom.PhoneAccountHandle,%20android.telecom.ConnectionRequest)
      */
     override fun onCreateOutgoingConnection(phoneAccountHandle: PhoneAccountHandle, connectionRequest: ConnectionRequest): Connection? {
-        TODO("Unimplemented")
+        return super.onCreateOutgoingConnection(phoneAccountHandle, connectionRequest)
     }
 
     /**
      * https://developer.android.com/reference/android/telecom/ConnectionService#onCreateOutgoingConnectionFailed(android.telecom.PhoneAccountHandle,%20android.telecom.ConnectionRequest)
      */
     override fun onCreateOutgoingConnectionFailed(phoneAccountHandle: PhoneAccountHandle, connectionRequest: ConnectionRequest) {
-        TODO("Unimplemented")
+        super.onCreateOutgoingConnectionFailed(phoneAccountHandle, connectionRequest)
     }
 
     /**
      * https://developer.android.com/reference/android/telecom/ConnectionService#onCreateIncomingConnection(android.telecom.PhoneAccountHandle,%20android.telecom.ConnectionRequest)
      */
     override fun onCreateIncomingConnection(phoneAccountHandle: PhoneAccountHandle, connectionRequest: ConnectionRequest): Connection? {
-        TODO("Unimplemented")
+        return super.onCreateIncomingConnection(phoneAccountHandle, connectionRequest)
     }
 
     /**
      * https://developer.android.com/reference/android/telecom/ConnectionService#onCreateIncomingConnectionFailed(android.telecom.PhoneAccountHandle,%20android.telecom.ConnectionRequest)
      */
     override fun onCreateIncomingConnectionFailed(phoneAccountHandle: PhoneAccountHandle, connectionRequest: ConnectionRequest) {
-        TODO("Unimplemented")
+        super.onCreateIncomingConnectionFailed(phoneAccountHandle, connectionRequest)
     }
 }
