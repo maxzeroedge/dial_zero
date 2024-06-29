@@ -1,25 +1,8 @@
 import 'package:dial_zero/models/dialled_model.dart';
-import 'package:dial_zero/router.dart';
+import 'package:dial_zero/utils/call_screen_utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum DialerActions {
-  RECORD(label: "Record", icon: Icons.record_voice_over),
-  HOLD(label: "Hold", icon: Icons.pause),
-  ADD_CALL(label: "Add Call", icon: Icons.add_call),
-  MUTE(label: "Mute", icon: Icons.mic_off),
-  SWITCH_TO_VIDEO(label: "Video", icon: Icons.video_call),
-  AUDIO_SOURCE(label: "Speaker", icon: Icons.speaker),
-  END_CALL(label: "End Call", icon: Icons.call_end);
-
-  const DialerActions({
-    required this.label,
-    required this.icon
-  });
-
-  final String label;
-  final IconData icon;
-}
 
 class CallScreenPageWidget extends ConsumerWidget {
 
@@ -112,16 +95,6 @@ class CallScreenButton extends ConsumerWidget {
             icon: Icon(type.icon),
             label: Text(type.label)
         );
-    }
-  }
-
-  void onPressedAction(DialerActions action) {
-    switch (action) {
-      case DialerActions.END_CALL:
-        router.go("/");
-        break;
-      default:
-        print("No Action Registered");
     }
   }
 }
