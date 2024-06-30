@@ -1,5 +1,7 @@
 package com.palashmax.dial_zero.manager
 
+import android.content.Intent
+import android.net.Uri
 import android.content.Context
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
@@ -24,6 +26,19 @@ class CallManager(private val context: Context) {
         val name: String,
         val isOutput: Boolean
     )
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun initiateCall(phoneNumber: String): Boolean {
+        if (context.checkSelfPermission(android.Manifest.permission.CALL_PHONE) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            return false
+        }
+
+        val uri = Uri.parse("tel:$phoneNumber")
+        val callIntent = Intent(Intent.ACTION_CALL, uri)
+        callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(callIntent)
+        return true
+    }
 
     fun setCurrentCall(call: Call) {
         currentCall = call

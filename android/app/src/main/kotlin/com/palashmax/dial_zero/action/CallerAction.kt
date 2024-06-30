@@ -23,6 +23,15 @@ class CallerAction: FlutterPlugin, MethodCallHandler {
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
+            "initiateCall" -> {
+                val phoneNumber = call.argument<String>("phoneNumber")
+                if (phoneNumber != null) {
+                    val success = callManager.initiateCall(phoneNumber)
+                    result.success(success)
+                } else {
+                    result.error("MISSING_PARAM", "Missing 'phoneNumber' parameter", null)
+                }
+            }
             "getAvailableAudioDevices" -> {
                 val devices = callManager.getAvailableAudioDevices()
                 val deviceList = devices.map { 

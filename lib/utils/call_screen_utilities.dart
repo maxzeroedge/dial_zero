@@ -1,4 +1,3 @@
-
 import 'package:dial_zero/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,26 +38,6 @@ const dialer_platform = MethodChannel('com.palashmax.dial_zero/dialer_actions');
 const caller_platform = MethodChannel('com.palashmax.dial_zero/caller_actions');
 const battery_platform = MethodChannel('com.palashmax.dial_zero/battery_actions');
 
-Future<List<Object?>?> getAudioList() async {
-  try {
-    final result = await dialer_platform.invokeMethod('getAudioSources');
-    return result;
-  } on PlatformException catch (e) {
-    print("Failed to get battery level: '${e.message}'.");
-    return [];
-  }
-}
-
-Future<List<Object?>?> makeTheCall(number) async {
-  try {
-    final result = await dialer_platform.invokeMethod('makeTheCall', [number]);
-    return result;
-  } on PlatformException catch (e) {
-    print("Failed to get battery level: '${e.message}'.");
-    return [];
-  }
-}
-
 Future<int?> getBatteryLevel() async {
   try {
     final result = await battery_platform.invokeMethod<int>('getBatteryLevel');
@@ -67,6 +46,20 @@ Future<int?> getBatteryLevel() async {
     print("Failed to get battery level: '${e.message}'.");
     return 0;
   }
+}
+
+Future<List<Object?>?> getAudioList() async {
+  try {
+    final result = await dialer_platform.invokeMethod('getAudioSources');
+    return result;
+  } on PlatformException catch (e) {
+    print("Failed to get audio device list: '${e.message}'.");
+    return [];
+  }
+}
+
+Future<bool> initiateCall(String phoneNumber) async {
+  return await caller_platform.invokeMethod("initiateCall", {"phoneNumber": phoneNumber})
 }
 
 Future<List<Map<String, dynamic>>> getAvailableAudioDevices() async {
