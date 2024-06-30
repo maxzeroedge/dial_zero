@@ -36,6 +36,7 @@ void onPressedAction(DialerActions action) {
 }
 
 const dialer_platform = MethodChannel('com.palashmax.dial_zero/dialer_actions');
+const caller_platform = MethodChannel('com.palashmax.dial_zero/caller_actions');
 const battery_platform = MethodChannel('com.palashmax.dial_zero/battery_actions');
 
 Future<List<Object?>?> getAudioList() async {
@@ -66,4 +67,21 @@ Future<int?> getBatteryLevel() async {
     print("Failed to get battery level: '${e.message}'.");
     return 0;
   }
+}
+
+Future<List<Map<String, dynamic>>> getAvailableAudioDevices() async {
+    final List<dynamic> devices = await caller_platform.invokeMethod('getAvailableAudioDevices');
+    return devices.cast<Map<String, dynamic>>();
+  }
+
+Future<bool> changeAudioDevice(int index) async {
+  return await caller_platform.invokeMethod('changeAudioDevice', {'index': index});
+}
+
+Future<void> toggleCallRecording() async {
+  await caller_platform.invokeMethod('toggleCallRecording');
+}
+
+Future<void> endCall() async {
+  await caller_platform.invokeMethod('endCall');
 }
