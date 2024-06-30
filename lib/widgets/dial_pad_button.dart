@@ -1,5 +1,6 @@
 import 'package:dial_zero/models/dialled_model.dart';
 import 'package:dial_zero/router.dart';
+import 'package:dial_zero/utils/call_screen_utilities.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,6 +51,7 @@ class DialPadButtonWidget extends ConsumerWidget {
               String dialled = ref.read(dialledProvider);
               if(dialled.isNotEmpty) {
                 //Call with dialled
+                makeTheCall(dialled);
                 router.go("/dial");
               }
             }
@@ -84,7 +86,7 @@ class DialerButtonWidget extends StatelessWidget {
         onPressed: onPressed,
         style: ButtonStyle(
           alignment: Alignment.center,
-          iconSize: MaterialStateProperty.all(32.0),
+          iconSize: WidgetStateProperty.all(32.0),
         ),
         child: Icon(icon),
     );

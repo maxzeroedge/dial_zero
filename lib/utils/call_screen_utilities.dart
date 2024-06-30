@@ -48,6 +48,16 @@ Future<List<Object?>?> getAudioList() async {
   }
 }
 
+Future<List<Object?>?> makeTheCall(number) async {
+  try {
+    final result = await dialer_platform.invokeMethod('makeTheCall', [number]);
+    return result;
+  } on PlatformException catch (e) {
+    print("Failed to get battery level: '${e.message}'.");
+    return [];
+  }
+}
+
 Future<int?> getBatteryLevel() async {
   try {
     final result = await battery_platform.invokeMethod<int>('getBatteryLevel');

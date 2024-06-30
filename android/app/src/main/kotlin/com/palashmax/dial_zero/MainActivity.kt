@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioManager
 import android.os.BatteryManager
 import android.os.Build
+import android.telecom.TelecomManager
 import androidx.annotation.RequiresApi
 import com.palashmax.dial_zero.action.BatteryActions
 import com.palashmax.dial_zero.action.DialerActions
@@ -22,8 +23,10 @@ class MainActivity: FlutterActivity() {
             flutterEngine = flutterEngine
         )
         batteryActions.registerChannelHandler()
-        val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val telecomManager = getSystemService(Context.TELECOM_SERVICE) as TelecomManager
         val dialerActions = DialerActions(
+            telecomManager = telecomManager,
             audioManager = audioManager,
             applicationContext = applicationContext,
             flutterEngine = flutterEngine

@@ -1,11 +1,17 @@
 package com.palashmax.dial_zero.action
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
+import android.net.Uri
 import android.os.BatteryManager
 import android.os.Build
+import android.os.Bundle
+import android.telecom.TelecomManager
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
@@ -13,6 +19,7 @@ import io.flutter.plugin.common.MethodChannel
 
 @RequiresApi(Build.VERSION_CODES.M)
 class DialerActions(
+    private val telecomManager: TelecomManager,
     private val audioManager: AudioManager,
     val applicationContext: Context,
     private val flutterEngine: FlutterEngine
@@ -22,10 +29,10 @@ class DialerActions(
     fun registerChannelHandler() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName).setMethodCallHandler {
                 call, result ->
-            if (call.method == "getAudioSources") {
-                result.success(getAudioSources())
-            } else {
-                result.notImplemented()
+            when(call.method) {
+                "getAudioSources" -> result.success(getAudioSources())
+                "makeTheCall" -> result.success(makeTheCall(call.arguments.toString()))
+                else -> result.notImplemented()
             }
         }
     }
@@ -40,7 +47,28 @@ class DialerActions(
                 "productName" to it.productName,
                 "name" to it.productName
             )
+        }.toList()
+    }
+
+    private fun makeTheCall(number: String) {
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.CALL_PHONE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
         }
+        val uri = Uri.fromParts("tel", number, null)
+        val extras = Bundle()
+        extras.putBoolean(TelecomManager.EXTRA_START_CALL_WITH_SPEAKERPHONE, true)
+        telecomManager.placeCall(uri, extras)
     }
 
 
