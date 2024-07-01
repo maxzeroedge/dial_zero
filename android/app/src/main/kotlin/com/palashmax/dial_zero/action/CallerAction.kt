@@ -1,7 +1,9 @@
 package com.palashmax.dial_zero.action
 
 import android.content.Context
+import android.os.Build
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresApi
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -14,14 +16,15 @@ class CallerAction: FlutterPlugin, MethodCallHandler {
     private lateinit var context: Context
     private lateinit var callManager: CallManager
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.palashmax.dial_zero/caller_actions")
         channel.setMethodCallHandler(this)
         context = flutterPluginBinding.applicationContext
         callManager = CallManager(context)
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    @RequiresApi(Build.VERSION_CODES.S)
+    override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "initiateCall" -> {
                 val phoneNumber = call.argument<String>("phoneNumber")
@@ -70,7 +73,7 @@ class CallerAction: FlutterPlugin, MethodCallHandler {
         }
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
     }
 }

@@ -59,7 +59,7 @@ Future<List<Object?>?> getAudioList() async {
 }
 
 Future<bool> initiateCall(String phoneNumber) async {
-  return await caller_platform.invokeMethod("initiateCall", {"phoneNumber": phoneNumber})
+  return await caller_platform.invokeMethod("initiateCall", {"phoneNumber": phoneNumber});
 }
 
 Future<List<Map<String, dynamic>>> getAvailableAudioDevices() async {

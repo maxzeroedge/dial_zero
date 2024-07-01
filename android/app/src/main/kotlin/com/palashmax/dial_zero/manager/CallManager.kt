@@ -46,6 +46,7 @@ class CallManager(private val context: Context) {
 
     @RequiresApi(Build.VERSION_CODES.M)
     fun getAvailableAudioDevices(): List<AudioDeviceOption> {
+        // TODO: Must be one or more of: AudioManager.GET_DEVICES_INPUTS, AudioManager.GET_DEVICES_OUTPUTS
         val devices = audioManager.getDevices(AudioManager.GET_DEVICES_ALL)
         return devices.mapNotNull { device ->
             val isOutput = device.isSink
@@ -92,9 +93,11 @@ class CallManager(private val context: Context) {
 
     @RequiresApi(Build.VERSION_CODES.M)
     fun changeAudioDevice(deviceOption: AudioDeviceOption) {
+        //TODO: Unresolved reference: setPreferredDevice
         audioManager.setPreferredDevice(deviceOption.deviceInfo)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun putCallOnHold() {
         currentCall?.let { call ->
             if (call.state == Call.STATE_ACTIVE) {
@@ -103,12 +106,13 @@ class CallManager(private val context: Context) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun addParticipantToCall(phoneNumber: String) {
-        currentCall?.let { call ->
-            call.conference(Call.Details.createCallDetails(context, phoneNumber))
-        }
+        //TODO: Unresolved reference: createCallDetails
+        currentCall?.conference(Call.Details.createCallDetails(context, phoneNumber))
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     fun toggleCallRecording() {
         if (!isRecording) {
             startCallRecording()
@@ -117,6 +121,7 @@ class CallManager(private val context: Context) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun startCallRecording() {
         if (isRecording) return
 
@@ -155,6 +160,7 @@ class CallManager(private val context: Context) {
         isRecording = false
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun endCall() {
         if (isRecording) {
             stopCallRecording()
