@@ -24,7 +24,8 @@ class CallManager(private val context: Context) {
     data class AudioDeviceOption(
         val deviceInfo: AudioDeviceInfo,
         val name: String,
-        val isOutput: Boolean
+        val isOutput: Boolean,
+        val isInput: Boolean
     )
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -44,25 +45,38 @@ class CallManager(private val context: Context) {
         currentCall = call
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    fun getAvailableAudioDevices(): List<AudioDeviceOption> {
-        // TODO: Must be one or more of: AudioManager.GET_DEVICES_INPUTS, AudioManager.GET_DEVICES_OUTPUTS
-        val devices = audioManager.getDevices(AudioManager.GET_DEVICES_ALL)
+    fun getAvailableAudioDevices(audioDeviceType: String): List<AudioDeviceOption> {
+        val devices: Array<AudioDeviceInfo>
+        val isForOutput: Boolean
+        val isForInput: Boolean
+        if(audioDeviceType.equals("INPUT", ignoreCase = true)) {
+            devices = audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS)
+            isForOutput = false
+            isForInput = true
+        } else if (audioDeviceType.equals("OUTPUT", ignoreCase = true)) {
+            devices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)
+            isForOutput = true
+            isForInput = false
+        } else {
+            throw Error("Invalid Audio Device Selected: $audioDeviceType")
+        }
         return devices.mapNotNull { device ->
             val isOutput = device.isSink
             val isInput = device.isSource
             when {
                 !isOutput && !isInput -> null
+                isForInput && !isInput -> null
+                isForOutput && !isOutput -> null
                 else -> AudioDeviceOption(
                     deviceInfo = device,
                     name = getReadableDeviceName(device),
-                    isOutput = isOutput
+                    isOutput = isOutput,
+                    isInput = isInput
                 )
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun getReadableDeviceName(device: AudioDeviceInfo): String {
         return when (device.type) {
             AudioDeviceInfo.TYPE_BUILTIN_EARPIECE -> "Phone earpiece"
@@ -91,28 +105,24 @@ class CallManager(private val context: Context) {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun changeAudioDevice(deviceOption: AudioDeviceOption) {
         //TODO: Unresolved reference: setPreferredDevice
-        audioManager.setPreferredDevice(deviceOption.deviceInfo)
+        //audioManager.setPreferredDevice(deviceOption.deviceInfo)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun putCallOnHold() {
         currentCall?.let { call ->
-            if (call.state == Call.STATE_ACTIVE) {
+            if (call.details.state == Call.STATE_ACTIVE) {
                 call.hold()
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun addParticipantToCall(phoneNumber: String) {
         //TODO: Unresolved reference: createCallDetails
-        currentCall?.conference(Call.Details.createCallDetails(context, phoneNumber))
+        //currentCall?.conference(Call.Details.createCallDetails(context, phoneNumber))
     }
 
-    @RequiresApi(Build.VERSION_CODES.S)
     fun toggleCallRecording() {
         if (!isRecording) {
             startCallRecording()
@@ -121,7 +131,6 @@ class CallManager(private val context: Context) {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.S)
     private fun startCallRecording() {
         if (isRecording) return
 
@@ -160,14 +169,11 @@ class CallManager(private val context: Context) {
         isRecording = false
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun endCall() {
         if (isRecording) {
             stopCallRecording()
         }
-        currentCall?.let { call ->
-            call.disconnect()
-        }
+        currentCall?.disconnect()
         currentCall = null
     }
 }

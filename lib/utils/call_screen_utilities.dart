@@ -21,20 +21,23 @@ enum DialerActions {
   final IconData icon;
 }
 
-void onPressedAction(DialerActions action) {
+enum AudioDeviceType {
+  INPUT, OUTPUT
+}
+
+void onPressedAction(DialerActions action, {dynamic param}) {
   switch (action) {
     case DialerActions.END_CALL:
       router.go("/");
       break;
     case DialerActions.AUDIO_SOURCE:
-      getAudioList();
+      getAvailableAudioDevices(AudioDeviceType.OUTPUT);
       break;
     default:
       print("No Action Registered");
   }
 }
 
-const dialer_platform = MethodChannel('com.palashmax.dial_zero/dialer_actions');
 const caller_platform = MethodChannel('com.palashmax.dial_zero/caller_actions');
 const battery_platform = MethodChannel('com.palashmax.dial_zero/battery_actions');
 
@@ -48,27 +51,24 @@ Future<int?> getBatteryLevel() async {
   }
 }
 
-Future<List<Object?>?> getAudioList() async {
-  try {
-    final result = await dialer_platform.invokeMethod('getAudioSources');
-    return result;
-  } on PlatformException catch (e) {
-    print("Failed to get audio device list: '${e.message}'.");
-    return [];
-  }
-}
-
 Future<bool> initiateCall(String phoneNumber) async {
   return await caller_platform.invokeMethod("initiateCall", {"phoneNumber": phoneNumber});
 }
 
-Future<List<Map<String, dynamic>>> getAvailableAudioDevices() async {
-    final List<dynamic> devices = await caller_platform.invokeMethod('getAvailableAudioDevices');
+Future<List<Map<String, dynamic>>> getAvailableAudioDevices(AudioDeviceType audioDeviceType) async {
+    final List<dynamic> devices = await caller_platform.invokeMethod('getAvailableAudioDevices',
+    {
+      'audioDeviceType': audioDeviceType.name
+    });
+    // TODO: type '_Map<Object?, Object?>' is not a subtype of type 'Map<String, dynamic>' in type cast
     return devices.cast<Map<String, dynamic>>();
   }
 
-Future<bool> changeAudioDevice(int index) async {
-  return await caller_platform.invokeMethod('changeAudioDevice', {'index': index});
+Future<bool> changeAudioDevice(int index, AudioDeviceType audioDeviceType) async {
+  return await caller_platform.invokeMethod('changeAudioDevice', {
+    'index': index,
+    'audioDeviceType': audioDeviceType
+  });
 }
 
 Future<void> toggleCallRecording() async {

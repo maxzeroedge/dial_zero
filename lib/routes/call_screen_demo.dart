@@ -7,7 +7,8 @@ class CallScreen extends StatefulWidget {
 }
 
 class _CallScreenState extends State<CallScreen> {
-  List<Map<String, dynamic>> audioDevices = [];
+  List<Map<String, dynamic>> audioOutputDevices = [];
+  List<Map<String, dynamic>> audioInputDevices = [];
   final TextEditingController _phoneNumberController = TextEditingController();
 
   @override
@@ -17,9 +18,11 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   Future<void> _loadAudioDevices() async {
-    final devices = await getAvailableAudioDevices();
+    final outputDevices = await getAvailableAudioDevices(AudioDeviceType.OUTPUT);
+    final inputDevices = await getAvailableAudioDevices(AudioDeviceType.INPUT);
     setState(() {
-      audioDevices = devices;
+      audioOutputDevices = outputDevices;
+      audioInputDevices = inputDevices;
     });
   }
 
@@ -66,13 +69,13 @@ class _CallScreenState extends State<CallScreen> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: audioDevices.length,
+              itemCount: audioOutputDevices.length,
               itemBuilder: (context, index) {
-                final device = audioDevices[index];
+                final device = audioOutputDevices[index];
                 return ListTile(
                   title: Text(device['name']),
                   subtitle: Text(device['isOutput'] ? 'Output' : 'Input'),
-                  onTap: () => changeAudioDevice(index),
+                  onTap: () => changeAudioDevice(index, AudioDeviceType.OUTPUT),
                 );
               },
             ),

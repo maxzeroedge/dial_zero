@@ -38,7 +38,7 @@ android {
         applicationId "com.palashmax.dial_zero"
         minSdkVersion flutter.minSdkVersion
         //noinspection EditedTargetSdkVersion
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -54,4 +54,8 @@ android {
 
 flutter {
     source '../..'
+}
+
+dependencies {
+    implementation("com.google.code.gson:gson:2.11.0")
 }

@@ -51,8 +51,11 @@ class DialPadButtonWidget extends ConsumerWidget {
               String dialled = ref.read(dialledProvider);
               if(dialled.isNotEmpty) {
                 //Call with dialled
-                initiateCall(dialled);
-                router.go("/dial");
+                initiateCall(dialled).then((initiated) {
+                  router.go("/dial");
+                }).catchError((error) {
+                  print(error);
+                });
               }
             }
         );
